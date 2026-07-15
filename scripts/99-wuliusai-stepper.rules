@@ -1,2 +1,0 @@
-# CH340 USB-to-UART at the physical USB port used by the Wuliusai stepper STM32.
-SUBSYSTEM=="tty", ENV{ID_BUS}=="usb", ENV{ID_VENDOR_ID}=="1a86", ENV{ID_MODEL_ID}=="7523", ENV{ID_PATH}=="pci-0000:00:14.0-usb-0:6:1.0", SYMLINK+="stepper_controller", MODE="0660", GROUP="dialout"
