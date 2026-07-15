@@ -1,0 +1,31 @@
+stepper_controller:
+  ros__parameters:
+    # USB 转串口插入后，用其唯一序列号创建此固定 udev 别名。
+    port: /dev/stepper_controller
+    baudrate: 115200
+    state_rate_hz: 10.0
+
+    # 两台电机共同驱动同一龙门架时保持 true；此时禁止单独移动或单独设零。
+    gantry.enabled: true
+    gantry.allow_individual_axis: false
+    # 两侧理论位置差超过此值时拒绝新的龙门运动；单位与轴单位相同。
+    gantry.max_theoretical_skew: 0.5
+
+    # 以下数值仅为低速调试默认值；装好机构后必须实测标定。
+    axis_0.name: axis_0
+    axis_0.unit: mm
+    axis_0.pulses_per_unit: 100.0
+    axis_0.direction: 1
+    axis_0.min_position: -1000000000.0
+    axis_0.max_position: 1000000000.0
+    axis_0.max_speed: 3.0
+    axis_0.acceleration: 5.0
+
+    axis_1.name: axis_1
+    axis_1.unit: mm
+    axis_1.pulses_per_unit: 100.0
+    axis_1.direction: 1
+    axis_1.min_position: -1000000000.0
+    axis_1.max_position: 1000000000.0
+    axis_1.max_speed: 3.0
+    axis_1.acceleration: 5.0

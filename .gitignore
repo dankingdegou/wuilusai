@@ -1,0 +1,24 @@
+# ROS 2 generated files
+build/
+install/
+log/
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+
+# STM32 / Keil generated files
+firmware/bjdj/MDK-ARM/Objects/
+firmware/bjdj/MDK-ARM/Listings/
+firmware/bjdj/MDK-ARM/bjdj/
+firmware/bjdj/MDK-ARM/*.bak
+firmware/bjdj/**/*.o
+firmware/bjdj/**/*.d
+firmware/bjdj/**/*.crf
+firmware/bjdj/**/*.axf
+firmware/bjdj/**/*.hex
+firmware/bjdj/**/*.map
+
+# Local devices, captures and large vendor archives are intentionally excluded.
+*.bag
+*.mcap
+*.zip

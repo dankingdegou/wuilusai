@@ -1,0 +1,12 @@
+uint8 axis
+bool relative
+float64 target
+float64 max_speed
+---
+bool success
+string message
+float64 final_position
+---
+float64 current_position
+float64 current_speed
+string state
