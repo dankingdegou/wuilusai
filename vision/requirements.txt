@@ -1,0 +1,4 @@
+numpy<2
+PyYAML>=5.4
+scikit-learn>=1.4
+# OpenCV 使用 Jetson 系统已安装的 python3-opencv，无需通过 pip 重装。

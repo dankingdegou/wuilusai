@@ -22,3 +22,10 @@ firmware/bjdj/**/*.map
 *.bag
 *.mcap
 *.zip
+
+# Vision local environment, captures and generated diagnostics
+vision/.venv/
+vision/**/__pycache__/
+vision/data/calibration/
+vision/output/*
+!vision/output/cross_validation.json

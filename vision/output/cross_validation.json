@@ -1,0 +1,51 @@
+{
+  "validation": "LeaveOneGroupOut：每次留出一整组不同摆放位置的照片",
+  "samples": 156,
+  "groups": 10,
+  "correct": 149,
+  "accuracy": 0.9551,
+  "errors": [
+    {
+      "image": "orbbec_20260715_140256_486_2048x1536.jpg",
+      "box": "left",
+      "expected": "soybean",
+      "predicted": "white_bean"
+    },
+    {
+      "image": "orbbec_20260715_140256_486_2048x1536.jpg",
+      "box": "right",
+      "expected": "mung_bean",
+      "predicted": "white_bean"
+    },
+    {
+      "image": "orbbec_20260715_140407_010_2048x1536.jpg",
+      "box": "center",
+      "expected": "mung_bean",
+      "predicted": "white_bean"
+    },
+    {
+      "image": "orbbec_20260715_140439_940_2048x1536.jpg",
+      "box": "left",
+      "expected": "mung_bean",
+      "predicted": "soybean"
+    },
+    {
+      "image": "orbbec_20260715_140440_940_2048x1536.jpg",
+      "box": "left",
+      "expected": "mung_bean",
+      "predicted": "soybean"
+    },
+    {
+      "image": "orbbec_20260715_140440_641_2048x1536.jpg",
+      "box": "left",
+      "expected": "mung_bean",
+      "predicted": "soybean"
+    },
+    {
+      "image": "orbbec_20260715_140543_733_2048x1536.jpg",
+      "box": "right",
+      "expected": "soybean",
+      "predicted": "mung_bean"
+    }
+  ]
+}

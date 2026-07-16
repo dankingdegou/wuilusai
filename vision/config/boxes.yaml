@@ -1,0 +1,45 @@
+camera:
+  device: /dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0
+  fallback_device: /dev/video2
+  width: 1280
+  height: 960
+  fps: 30
+  warmup_frames: 20
+  burst_frames: 5
+boxes:
+  left:
+    x: 31
+    y: 530
+    w: 226
+    h: 100
+  center:
+    x: 456
+    y: 754
+    w: 281
+    h: 112
+  right:
+    x: 932
+    y: 568
+    w: 218
+    h: 56
+prototypes:
+  mung_bean:
+    lab:
+    - 59.0
+    - 130.0
+    - 135.0
+    max_distance: 62.689
+  soybean:
+    lab:
+    - 119.75
+    - 132.0
+    - 132.5
+    max_distance: 37.381
+  white_bean:
+    lab:
+    - 147.0
+    - 128.5
+    - 129.0
+    max_distance: 37.726
+decision:
+  minimum_confidence: 0.65

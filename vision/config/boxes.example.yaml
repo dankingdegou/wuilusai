@@ -1,0 +1,26 @@
+# 比赛视觉第一版配置。复制为 boxes.yaml 后，填入实际标定结果。
+camera:
+  device: /dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0
+  fallback_device: /dev/video0
+  width: 1280
+  height: 960
+  fps: 30
+  warmup_frames: 20
+  burst_frames: 5
+
+# 用 `python3 calibrate_rois.py --config config/boxes.yaml --image <照片>` 标定。
+boxes:
+  left:   {x: 0, y: 0, w: 0, h: 0}
+  center: {x: 0, y: 0, w: 0, h: 0}
+  right:  {x: 0, y: 0, w: 0, h: 0}
+
+# 从已确认类别的照片提取 Lab 中位数后写入这里。以下仅是格式示例，不可直接用于比赛。
+# prototypes:
+#   mung_bean: {lab: [120.0, 105.0, 130.0], max_distance: 18.0}
+#   soybean:   {lab: [180.0, 126.0, 155.0], max_distance: 18.0}
+#   white_bean:{lab: [210.0, 128.0, 130.0], max_distance: 18.0}
+prototypes: {}
+
+decision:
+  # 距离越小越接近类别原型；置信度低于此数值时输出 unknown。
+  minimum_confidence: 0.65
