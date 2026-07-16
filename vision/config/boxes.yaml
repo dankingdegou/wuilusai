@@ -8,20 +8,20 @@ camera:
   burst_frames: 5
 boxes:
   left:
-    x: 31
-    y: 530
-    w: 226
-    h: 100
+    x: 38
+    y: 586
+    w: 235
+    h: 92
   center:
-    x: 456
-    y: 754
-    w: 281
-    h: 112
+    x: 495
+    y: 780
+    w: 315
+    h: 120
   right:
-    x: 932
-    y: 568
-    w: 218
-    h: 56
+    x: 975
+    y: 592
+    w: 255
+    h: 95
 prototypes:
   mung_bean:
     lab:
