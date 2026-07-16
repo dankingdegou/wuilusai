@@ -27,5 +27,7 @@ firmware/bjdj/**/*.map
 vision/.venv/
 vision/**/__pycache__/
 vision/data/calibration/
+vision/data/jetson_label_gallery/
+vision/data/jetson_labels.yaml
 vision/output/*
 !vision/output/cross_validation.json

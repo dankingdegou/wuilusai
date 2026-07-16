@@ -52,6 +52,16 @@ python3 build_color_prototypes.py
 python3 label_dataset_groups.py --since 20260715_153900
 ```
 
+若 Jetson 没有可用桌面弹窗，可使用浏览器标注器：
+
+```bash
+./.venv/bin/python label_dataset_web.py \
+  --images-dir ~/Pictures/orbbec_archive \
+  --since 20260715_153900
+```
+
+在主机浏览器访问 `http://<Jetson_IP>:8088/`，每组图片都会带 ROI 框；选择三个类别并点击保存即可。
+
 ## 正式分类器（推荐）
 
 单一 Lab 原型会受阴影影响，因此正式使用 SVM 颜色分布分类器。训练和验证均在 `vision/.venv` 中运行：
