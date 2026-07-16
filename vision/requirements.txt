@@ -1,4 +1,6 @@
-numpy<2
+# Jetson Ubuntu 22.04 的系统 SciPy 1.8 要求 NumPy < 1.25；PC 的 Python 3.12 使用较新版本。
+numpy>=1.24,<1.25; python_version < "3.11"
+numpy<2; python_version >= "3.11"
 PyYAML>=5.4
 # 与 Jetson Python 3.10 / 系统 OpenCV 兼容，并保持 joblib 模型版本一致。
 scikit-learn==1.3.2
