@@ -45,11 +45,15 @@ def main() -> int:
     parser.add_argument("--output", default="data/labels.yaml")
     parser.add_argument("--labels", default="mung_bean,soybean,white_bean", help="三种类别名，以逗号分隔")
     parser.add_argument("--gap-seconds", type=float, default=4.0, help="超过此间隔即视作新摆放组")
+    parser.add_argument("--since", help="只标注此时间戳及之后的图片，格式 YYYYMMDD_HHMMSS")
     args = parser.parse_args()
 
     config = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
     class_names = [item.strip() for item in args.labels.split(",") if item.strip()]
     paths = sorted(Path(args.images_dir).glob("orbbec_*.jpg"), key=captured_at)
+    if args.since:
+        since = datetime.strptime(args.since, "%Y%m%d_%H%M%S")
+        paths = [path for path in paths if captured_at(path) >= since]
     batches = groups(paths, args.gap_seconds)
     if not batches:
         raise SystemExit("未找到 orbbec_*.jpg 图片。")

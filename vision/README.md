@@ -46,6 +46,12 @@ python3 build_color_prototypes.py
 
 前者输出 `data/labels.yaml`，后者用所有非空标注样本生成鲁棒 Lab 原型，写入 `config/boxes.yaml`。
 
+若同一目录混有旧照片，可按时间戳只标注新数据，例如：
+
+```bash
+python3 label_dataset_groups.py --since 20260715_153900
+```
+
 ## 正式分类器（推荐）
 
 单一 Lab 原型会受阴影影响，因此正式使用 SVM 颜色分布分类器。训练和验证均在 `vision/.venv` 中运行：
