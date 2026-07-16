@@ -27,8 +27,8 @@ def captured_at(filename: str) -> datetime:
     return datetime.strptime(match.group(1), "%Y%m%d_%H%M%S")
 
 
-def load_samples(config: dict, manifest: dict, images_dir: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[dict]]:
-    rows, group = [], 0
+def load_samples(config: dict, manifest: dict, images_dir: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[dict], int]:
+    rows, group, skipped_empty = [], 0, 0
     previous = None
     for filename in sorted(manifest["labels"], key=captured_at):
         current = captured_at(filename)
@@ -39,10 +39,16 @@ def load_samples(config: dict, manifest: dict, images_dir: Path) -> tuple[np.nda
         if image is None:
             raise FileNotFoundError(images_dir / filename)
         for box_name, label in manifest["labels"][filename].items():
+            # ``empty`` is useful annotation metadata, but a few empty examples
+            # are not enough to train a reliable fourth visual class. Empty-box
+            # detection should be added as a dedicated occupancy check later.
+            if label == "empty":
+                skipped_empty += 1
+                continue
             box = config["boxes"][box_name]
             roi = image[box["y"]:box["y"] + box["h"], box["x"]:box["x"] + box["w"]]
             rows.append({"feature": extract_features(roi), "label": label, "group": group, "filename": filename, "box": box_name})
-    return (np.vstack([row["feature"] for row in rows]), np.asarray([row["label"] for row in rows]), np.asarray([row["group"] for row in rows]), rows)
+    return (np.vstack([row["feature"] for row in rows]), np.asarray([row["label"] for row in rows]), np.asarray([row["group"] for row in rows]), rows, skipped_empty)
 
 
 def main() -> int:
@@ -55,7 +61,7 @@ def main() -> int:
     args = parser.parse_args()
     config = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
     manifest = yaml.safe_load(Path(args.labels).read_text(encoding="utf-8"))
-    features, labels, groups, rows = load_samples(config, manifest, Path(args.images_dir))
+    features, labels, groups, rows, skipped_empty = load_samples(config, manifest, Path(args.images_dir))
     model = make_pipeline(StandardScaler(), SVC(C=4.0, gamma="scale", probability=True, random_state=42))
     prediction = cross_val_predict(model, features, labels, groups=groups, cv=LeaveOneGroupOut())
     errors = [
@@ -66,6 +72,7 @@ def main() -> int:
     report = {
         "validation": "LeaveOneGroupOut：每次留出一整组不同摆放位置的照片",
         "samples": int(len(labels)),
+        "skipped_empty_samples": skipped_empty,
         "groups": int(len(np.unique(groups))),
         "correct": int(np.sum(prediction == labels)),
         "accuracy": round(float(np.mean(prediction == labels)), 4),
