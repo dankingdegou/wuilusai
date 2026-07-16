@@ -56,3 +56,19 @@ python3 build_color_prototypes.py
 ```
 
 训练会生成 `models/bean_classifier.joblib` 和按整组照片留出验证的 `output/cross_validation.json`。日常相机推理直接运行 `./run_vision_pc.sh`。
+
+## 一键完整测试
+
+```bash
+./run_vision_test.sh
+```
+
+它会检查配置、模型、依赖、固定相机路径和三个 ROI，实际采集一帧并保存原图、标注图、JSON。若测试时三个箱子已按预期放好，可启用严格验收：
+
+```bash
+./run_vision_test.sh \
+  --expect left=mung_bean,center=soybean,right=white_bean \
+  --min-confidence 0.80
+```
+
+任一类别错误或置信度不足时，脚本以退出码 `2` 失败；这适合比赛前逐项验收。
