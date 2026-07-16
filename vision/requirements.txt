@@ -1,4 +1,5 @@
 numpy<2
 PyYAML>=5.4
-scikit-learn>=1.4
+# 与 Jetson Python 3.10 / 系统 OpenCV 兼容，并保持 joblib 模型版本一致。
+scikit-learn==1.3.2
 # OpenCV 使用 Jetson 系统已安装的 python3-opencv，无需通过 pip 重装。
