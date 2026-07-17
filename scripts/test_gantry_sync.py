@@ -10,19 +10,25 @@ from stepper_test_common import (
 )
 
 
+def direction_name(steps: int) -> str:
+    return "正向" if steps > 0 else "反向"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="interactive synchronized dual-stepper gantry test")
     parser.add_argument("--port", default=default_port())
     args = parser.parse_args()
     print("=== 双电机龙门同步测试 ===")
-    print("初次测试建议每侧仅 100 脉冲。两侧要让龙门向同一物理方向移动，原始脉冲符号可能相同也可能相反，取决于驱动器接线。")
-    left_steps = ask_int("axis 0（左轨）脉冲数", 100, -1000000, 1000000)
-    right_steps = ask_int("axis 1（右轨）脉冲数", 100, -1000000, 1000000)
+    print("初次测试建议每侧仅 100 脉冲。正数为该驱动器正向，负数为反向。"
+          "两侧要让龙门向同一物理方向移动，两个轴的符号可能相同也可能相反，取决于接线。")
+    left_steps = ask_int("axis 0（左轨）脉冲数（负数=反向）", 100, -1000000, 1000000)
+    right_steps = ask_int("axis 1（右轨）脉冲数（负数=反向）", 100, -1000000, 1000000)
     if left_steps == 0 or right_steps == 0:
         raise ValueError("同步测试的两侧脉冲数都不能为 0")
     pps = ask_int("较快一侧的最大速度 pps", 200, 100, 5000)
     accel = ask_int("较快一侧的加速度 pps²", 500, 100, 20000)
-    require_confirmation(f"即将同步运动: axis0={left_steps} steps, axis1={right_steps} steps, "
+    require_confirmation(f"即将同步运动: axis0={left_steps} steps（{direction_name(left_steps)}）, "
+                         f"axis1={right_steps} steps（{direction_name(right_steps)}）, "
                          f"max_speed={pps} pps, accel={accel} pps²")
     board = StepperSerial(args.port)
     try:
