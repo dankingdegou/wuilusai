@@ -28,18 +28,16 @@ from wuliusai_stepper_controller.protocol import (  # noqa: E402
 
 
 def default_port() -> str:
-    """Return the first usable stepper serial port on PC or Jetson.
-
-    ``WULIUSAI_STEPPER_PORT`` is an explicit override.  Jetson's 40-pin UART
-    is exposed as ttyTHS1; it replaces the old external USB-to-TTL adapter.
-    """
+    """Return the known USB serial port; direct UART always needs an override."""
     override = os.environ.get("WULIUSAI_STEPPER_PORT")
     if override:
         return override
-    for port in ("/dev/stepper_controller", "/dev/ttyTHS1", "/dev/ttyUSB0"):
+    # Never automatically select ttyTHS*: a PC can expose an unrelated THS
+    # device, while a Jetson direct-UART connection must be deliberate.
+    for port in ("/dev/stepper_controller", "/dev/ttyACM0", "/dev/ttyUSB0"):
         if os.path.exists(port):
             return port
-    return "/dev/ttyTHS1"
+    return "/dev/stepper_controller"
 
 
 def require_latest_firmware(board: StepperSerial) -> tuple[int, int, int]:
