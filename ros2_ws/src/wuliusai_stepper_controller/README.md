@@ -10,10 +10,10 @@ source install/setup.bash
 ros2 launch wuliusai_stepper_controller stepper_controller.launch.py
 ```
 
-After connecting the USB-to-UART adapter, identify it with `udevadm info -q property -n /dev/ttyUSB0` (replace the device name). Create `/etc/udev/rules.d/99-wuliusai-stepper.rules` using its unique `ID_VENDOR_ID`, `ID_MODEL_ID` and `ID_SERIAL_SHORT`, with a rule such as:
+The board now exposes an STM32 native USB CDC virtual serial port. Identify it with `udevadm info -q property -n /dev/ttyACM0` (replace the device name). Create `/etc/udev/rules.d/99-wuliusai-stepper.rules` using its unique `ID_VENDOR_ID`, `ID_MODEL_ID` and `ID_SERIAL`, with a rule such as:
 
 ```text
-SUBSYSTEM=="tty", ATTRS{idVendor}=="xxxx", ATTRS{idProduct}=="yyyy", ATTRS{serial}=="unique_serial", SYMLINK+="stepper_controller", MODE="0660", GROUP="dialout"
+SUBSYSTEM=="tty", ENV{ID_BUS}=="usb", ENV{ID_VENDOR_ID}=="0483", ENV{ID_MODEL_ID}=="5740", ENV{ID_SERIAL}=="your_firmware_usb_serial", SYMLINK+="stepper_controller", MODE="0660", GROUP="dialout"
 ```
 
 Then run `sudo udevadm control --reload-rules && sudo udevadm trigger` and reconnect the adapter. Do not create a rule until the actual adapter identifiers have been read.

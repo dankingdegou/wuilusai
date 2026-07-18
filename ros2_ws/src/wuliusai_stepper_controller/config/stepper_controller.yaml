@@ -1,6 +1,7 @@
 stepper_controller:
   ros__parameters:
-    # USB 转串口插入后，用其唯一序列号创建此固定 udev 别名。
+    # STM32 原生 USB CDC 虚拟串口；由 99-wuliusai-stepper.rules 按固件 USB
+    # 序列号创建此固定别名，不依赖 ttyACM 编号，也不再需要 CH340。
     port: /dev/stepper_controller
     baudrate: 115200
     state_rate_hz: 10.0

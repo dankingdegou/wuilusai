@@ -28,15 +28,16 @@ from wuliusai_stepper_controller.protocol import (  # noqa: E402
 
 
 def default_port() -> str:
-    """Return the known USB serial port; direct UART always needs an override."""
+    """Use only the STM32 native-USB CDC fixed alias unless explicitly overridden."""
     override = os.environ.get("WULIUSAI_STEPPER_PORT")
     if override:
         return override
-    # Never automatically select ttyTHS*: a PC can expose an unrelated THS
-    # device, while a Jetson direct-UART connection must be deliberate.
-    for port in ("/dev/stepper_controller", "/dev/ttyACM0", "/dev/ttyUSB0"):
-        if os.path.exists(port):
-            return port
+    # Do not silently fall back to ttyACM0/ttyUSB0: their numbers can change
+    # when a camera or another USB serial device is plugged in.  Reinstall the
+    # udev rule if this alias is absent, or deliberately pass --port to test a
+    # different transport.
+    if os.path.exists("/dev/stepper_controller"):
+        return "/dev/stepper_controller"
     return "/dev/stepper_controller"
 
 
