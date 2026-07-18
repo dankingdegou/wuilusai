@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/jetson_env.sh"
 
 if [[ ! -e /dev/stepper_controller ]]; then
-  echo 'ERROR: /dev/stepper_controller is missing. Connect the CH340 stepper board and create its Jetson udev rule first.' >&2
+  echo 'ERROR: /dev/stepper_controller is missing. Connect the STM32 USB CDC cable and install its udev rule first.' >&2
   exit 1
 fi
 

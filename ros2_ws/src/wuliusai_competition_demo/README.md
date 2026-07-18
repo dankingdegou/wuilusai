@@ -16,7 +16,7 @@
 
 1. `vision.config_file`：已完成三箱 ROI 标定的 `vision/config/boxes.yaml` 绝对路径。
 2. `vision.model_file`：训练好的 `bean_classifier*.joblib` 绝对路径；可留空以临时使用原型分类。
-3. `destination_slots_mm` 的 4、5、6、7：每个投放格实际中心的 `[x_mm, y_mm]`。
+3. `destination_slots_mm` 的 4、5、6、7：每个投放格实际中心的 `[x_mm, y_mm]`。Jetson 默认 ROS 启动环境使用系统 OpenCV/NumPy；因此 `vision.model_file` 留空时使用原型分类。若要加载 joblib/SVM 模型，须在兼容 NumPy 1.x 的专用环境中安装 joblib 与 scikit-learn。
 4. 使用固定相机拍一张完整场地图，执行：
 
 ```bash
