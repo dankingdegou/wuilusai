@@ -1,3 +1,3 @@
-# Copy this file to /etc/udev/rules.d/ only after replacing USB_PATH below.
-# Run: udevadm info -q property -n /dev/ttyUSB0 | grep '^ID_PATH='
-SUBSYSTEM=="tty", ENV{ID_BUS}=="usb", ENV{ID_VENDOR_ID}=="1a86", ENV{ID_MODEL_ID}=="7523", ENV{ID_PATH}=="REPLACE_WITH_JETSON_USB_PATH", SYMLINK+="stepper_controller", MODE="0660", GROUP="dialout"
+# STM32 native USB CDC virtual serial port.  Replace the serial string with
+# the ID_SERIAL reported by: udevadm info -q property -n /dev/ttyACM0
+SUBSYSTEM=="tty", ENV{ID_BUS}=="usb", ENV{ID_VENDOR_ID}=="0483", ENV{ID_MODEL_ID}=="5740", ENV{ID_SERIAL}=="REPLACE_WITH_FIRMWARE_USB_SERIAL", SYMLINK+="stepper_controller", MODE="0660", GROUP="dialout"
