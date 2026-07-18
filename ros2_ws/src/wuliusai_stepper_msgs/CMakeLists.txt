@@ -7,6 +7,7 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "action/MoveAxis.action"
   "action/MoveGantry.action"
+  "action/ExecuteScoop.action"
   "msg/StepperState.msg"
   "srv/SetAxisZero.srv"
   "srv/SetGantryZero.srv"

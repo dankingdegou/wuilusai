@@ -1,0 +1,39 @@
+# This file contains only calibrated, competition-level coordinates.  The
+# shipped values are deliberately incomplete: the demo refuses to move until
+# field_calibration.image_corners_px and destination waypoints are taught.
+vision:
+  config_file: ""
+  model_file: ""
+  minimum_confidence: 0.80
+  retries: 2
+  # Pixel radius used to score a dense, clear scoop area inside a source ROI.
+  scoop_radius_px: 45
+  border_margin_px: 25
+  minimum_foreground_ratio: 0.02
+field:
+  width_mm: 4000.0
+  height_mm: 2000.0
+  safe_point_mm: [2000.0, 1000.0]
+  # Click order is bottom_left, bottom_right, top_right, top_left.
+  image_corners_px: []
+source_nominal_mm:
+  mung_bean: [400.0, 400.0]
+  soybean: [400.0, 1000.0]
+  white_bean: [400.0, 1600.0]
+destination_slots_mm:
+  # Teach each drop centre.  Empty slots make that task reject before motion.
+  "4": []
+  "5": []
+  "6": []
+  "7": []
+motion:
+  gantry_action: /stepper_controller/move_gantry
+  stop_service: /stepper_controller/stop
+  max_speed_mm_s: 80.0
+  action_wait_s: 5.0
+tool:
+  # Y, Z and bucket are intentionally simulated in this first X-only build.
+  simulated: true
+  approach_seconds: 0.5
+  scoop_seconds: 1.2
+  drop_seconds: 0.8

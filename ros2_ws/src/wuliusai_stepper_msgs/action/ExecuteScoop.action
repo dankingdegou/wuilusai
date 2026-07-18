@@ -1,0 +1,16 @@
+# Requested source bean class. Supported values: mung_bean, soybean, white_bean.
+string bean_type
+# Destination slot from the competition drawing: 4, 5, 6, or 7.
+uint8 target_slot
+---
+bool success
+string message
+float64 source_x
+float64 source_y
+float64 target_x
+float64 target_y
+---
+# SENSE, MOVE_TO_SOURCE, SCOOP_SIM, MOVE_TO_TARGET, DROP_SIM, RETURN_SAFE, ERROR
+string phase
+float64 x
+float64 y
