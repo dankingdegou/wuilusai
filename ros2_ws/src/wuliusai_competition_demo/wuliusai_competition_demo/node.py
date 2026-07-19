@@ -50,6 +50,10 @@ class CompetitionDemo(Node):
 
     def _validate_motion_config(self) -> None:
         tool = self.config.get("tool", {})
+        required = ("z_simulated", "z_axis", "z_down_direction", "z_travel_pulses", "z_speed_pps")
+        missing = [name for name in required if name not in tool]
+        if missing:
+            raise ValueError(f"real Z configuration is incomplete; missing tool fields: {', '.join(missing)}")
         if bool(tool.get("z_simulated", False)):
             raise ValueError("tool.z_simulated must be false: this demo uses the real Y/Z STM32 Z axis")
         z_axis = int(tool.get("z_axis", 1))
