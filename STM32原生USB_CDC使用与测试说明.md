@@ -150,14 +150,17 @@ ros2 service call /stepper_controller/set_gantry_zero \
 
 ## 8. 启动比赛单铲 Demo
 
-Demo 当前状态：X 双电机龙门为真实执行器；Y、Z、铲斗开合仍为模拟阶段。不要将模拟阶段误认为实际抓取已接线。
+Demo 当前状态：X 双电机龙门和 Z 轴为真实执行器；Y 与铲斗开合仍为模拟阶段。Z 使用第二块 STM32 的 `/dev/yz_controller`，PA2/PA3 对应协议 `axis 1`。
+
+首次运行 Demo 前，先用 `test_xz_three_motor_sync.py` 低速验证方向。当前 Z 尚未接入原点开关，Demo 把启动时的位置当作 Z 顶部参考点，并执行相对脉冲：默认下降 `+1600`、回升 `-1600`、速度 `500 pps`。如果正脉冲实际让 Z 上升，将配置中的 `tool.z_down_direction` 改为 `-1`。每次启动前都必须人工确认 Z 位于安全顶部，不能把软件脉冲位置当作绝对位置。
 
 先准备一份运行配置，例如 `~/wuilusai_runtime/competition_demo.yaml`。它需要填写：
 
 1. 已标定三箱 ROI 的 `vision.config_file` 路径；
 2. 四个场地角点 `field.image_corners_px`；
 3. 投放格 `4` 至 `7` 的实际 `[x_mm, y_mm]`；
-4. 合理的 `motion.max_speed_mm_s`。
+4. 合理的 `motion.max_speed_mm_s`；
+5. Z 参数 `tool.z_axis: 1`、`tool.z_travel_pulses`、`tool.z_speed_pps` 和 `tool.z_down_direction`。
 
 启动：
 
@@ -176,7 +179,7 @@ competition_send_task mung_bean 4
 
 可用豆类为 `mung_bean`、`soybean`、`white_bean`，投放格只允许 `4`、`5`、`6`、`7`。
 
-视觉低置信度、ROI 无效、未标定场地、未教学投放点时，Demo 会拒绝或中止任务，不会退回到箱子中心盲抓。
+启动脚本会同时启动 `/dev/x_gantry_controller` 对应的 X 控制器、`/dev/yz_controller` 对应的 Y/Z 控制器以及比赛任务节点。视觉低置信度、ROI 无效、未标定场地、未教学投放点时，Demo 会拒绝或中止任务，不会退回到箱子中心盲抓。
 
 ## 9. 常见问题
 

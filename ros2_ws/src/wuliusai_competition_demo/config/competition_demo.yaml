@@ -29,11 +29,21 @@ destination_slots_mm:
 motion:
   gantry_action: /stepper_controller/move_gantry
   stop_service: /stepper_controller/stop
-  max_speed_mm_s: 80.0
+  z_action: /yz_controller/move_axis
+  z_stop_service: /yz_controller/stop
+  # 5 mm/s corresponds to 500 pps with the current 100 pulses/mm X setting,
+  # matching the successful low-speed mechanism test.
+  max_speed_mm_s: 5.0
   action_wait_s: 5.0
 tool:
-  # Y, Z and bucket are intentionally simulated in this first X-only build.
-  simulated: true
-  approach_seconds: 0.5
+  # Y and bucket remain simulated. Z is the real PA2/PA3 channel (axis 1) on
+  # /dev/yz_controller. Units are raw pulses until Z mechanics are calibrated.
+  y_simulated: true
+  z_simulated: false
+  bucket_simulated: true
+  z_axis: 1
+  z_down_direction: 1
+  z_travel_pulses: 1600.0
+  z_speed_pps: 500.0
   scoop_seconds: 1.2
   drop_seconds: 0.8

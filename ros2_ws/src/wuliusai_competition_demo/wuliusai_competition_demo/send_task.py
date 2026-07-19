@@ -21,7 +21,8 @@ def main() -> None:
             raise RuntimeError("competition demo action server is unavailable")
         goal = ExecuteScoop.Goal(); goal.bean_type = args.bean_type; goal.target_slot = args.slot
         handle = client.send_goal_async(goal, feedback_callback=lambda event: print(
-            f"[{event.feedback.phase}] ({event.feedback.x:.1f}, {event.feedback.y:.1f})"))
+            f"[{event.feedback.phase}] x={event.feedback.x:.1f}, y={event.feedback.y:.1f}, "
+            f"z={event.feedback.z:.0f} pulses"))
         rclpy.spin_until_future_complete(node, handle)
         goal_handle = handle.result()
         if not goal_handle.accepted:

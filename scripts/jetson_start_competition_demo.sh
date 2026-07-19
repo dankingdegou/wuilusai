@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start the competition Action server with the STM32 USB-CDC / X-gantry stack.
+# Start both STM32 USB-CDC controllers and the competition Action server.
 set -euo pipefail
 
 if [[ $# -ne 1 ]]; then
@@ -14,9 +14,13 @@ if [[ ! -e /dev/stepper_controller ]]; then
   echo 'ERROR: /dev/stepper_controller is missing; check the STM32 USB CDC cable and udev rule.' >&2
   exit 1
 fi
+if [[ ! -e /dev/yz_controller ]]; then
+  echo 'ERROR: /dev/yz_controller is missing; check the Y/Z STM32 USB CDC cable and udev rule.' >&2
+  exit 1
+fi
 if [[ ! -f "$1" ]]; then
   echo "ERROR: configuration file not found: $1" >&2
   exit 1
 fi
 
-exec ros2 launch wuliusai_competition_demo competition_demo.launch.py config:="$1"
+exec ros2 launch wuliusai_competition_demo competition_system.launch.py config:="$1"

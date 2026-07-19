@@ -1,0 +1,30 @@
+yz_controller:
+  ros__parameters:
+    port: /dev/yz_controller
+    baudrate: 115200
+    state_rate_hz: 10.0
+
+    # This board controls two independent axes; it is not a coupled gantry.
+    gantry.enabled: false
+    gantry.allow_individual_axis: true
+    gantry.max_theoretical_skew: 0.5
+
+    # PA0/PA1: reserved for Y. Raw pulse units are used before calibration.
+    axis_0.name: y_axis
+    axis_0.unit: pulse
+    axis_0.pulses_per_unit: 1.0
+    axis_0.direction: 1
+    axis_0.min_position: -1000000000.0
+    axis_0.max_position: 1000000000.0
+    axis_0.max_speed: 500.0
+    axis_0.acceleration: 500.0
+
+    # PA2/PA3: Z axis confirmed by the successful three-motor test.
+    axis_1.name: z_axis
+    axis_1.unit: pulse
+    axis_1.pulses_per_unit: 1.0
+    axis_1.direction: 1
+    axis_1.min_position: -1000000000.0
+    axis_1.max_position: 1000000000.0
+    axis_1.max_speed: 500.0
+    axis_1.acceleration: 500.0

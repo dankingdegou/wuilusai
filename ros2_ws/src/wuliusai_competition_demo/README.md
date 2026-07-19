@@ -4,7 +4,7 @@
 
 `/competition/execute_scoop` (`wuliusai_stepper_msgs/action/ExecuteScoop`)
 
-一条任务只做一次：识别目标豆箱 → 选取豆子密集且避开边缘的铲取点 → X 移到该点 → 模拟铲取 → X 移到投放位 → 模拟投放 → 返回安全点。当前仅 X 龙门真实运动，Y、Z、夹爪/铲斗阶段明确为模拟，不能误认为已经接入了实际执行器。
+一条任务只做一次：识别目标豆箱 → 选取豆子密集且避开边缘的铲取点 → X 移到该点 → Z 下降 → 模拟铲取 → Z 回升 → X 移到投放位 → Z 下降 → 模拟投放 → Z 回升 → 返回安全点。当前 X 龙门和 Z 轴是真实运动；Y、夹爪/铲斗仍为模拟。
 
 ## 坐标
 
@@ -28,10 +28,12 @@ competition_calibrate_field --image ~/Pictures/field.jpg \
 
 ## 启动与任务
 
-先启动并完成 X 龙门回零（`/stepper_controller/set_gantry_zero`），再启动：
+Z 使用第二块 STM32 的 `/dev/yz_controller`，`axis=1` 即 PA2/PA3。未完成机械标定前，配置以脉冲为单位，默认下降 `+1600`、回升 `-1600`、速度 `500 pps`。如果实际正方向是上升，应把 `tool.z_down_direction` 改为 `-1`。
+
+完整系统启动会同时启动 X 控制器、Y/Z 控制器与任务节点：
 
 ```bash
-ros2 launch wuliusai_competition_demo competition_demo.launch.py \
+ros2 launch wuliusai_competition_demo competition_system.launch.py \
   config:=~/wuilusai_runtime/competition_demo.yaml
 ```
 
@@ -43,7 +45,7 @@ competition_send_task soybean 5
 competition_send_task white_bean 6
 ```
 
-Action 会输出阶段反馈：`SENSE`、`MOVE_TO_SOURCE`、`SCOOP_SIM`、`MOVE_TO_TARGET`、`DROP_SIM`、`RETURN_SAFE`。执行前清空运动区域；首次请将 `motion.max_speed_mm_s` 调低到安全值并以空载测试。
+Action 会输出 X/Y 和 Z 脉冲位置反馈，包括 `Z_DESCEND_SOURCE`、`Z_ASCEND_SOURCE`、`Z_DESCEND_TARGET`、`Z_ASCEND_TARGET`。执行前清空运动区域；首次请低速空载测试。若 Z 在已知下降状态时后续阶段失败，程序会优先尝试反向抬升；若 Z 运动本身失败导致位置不确定，则停止两块控制器且不再移动 X。
 
 ## 视觉安全策略
 
