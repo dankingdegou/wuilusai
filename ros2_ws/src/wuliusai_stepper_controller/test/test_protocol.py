@@ -1,6 +1,8 @@
 import struct
 
-from wuliusai_stepper_controller.protocol import CMD_MOVE_SYNC, CMD_STATUS, FrameParser, crc8, make_frame
+from wuliusai_stepper_controller.protocol import (
+    CMD_MOVE_SYNC, CMD_STATUS, STATUS_DONE, FrameParser, StepperSerial, crc8, make_frame,
+)
 
 
 def test_crc_and_frame_round_trip():
@@ -24,3 +26,12 @@ def test_synchronized_gantry_frame_payload_fits_firmware_limit():
     frame = make_frame(CMD_MOVE_SYNC, payload)
     assert len(payload) == 18
     assert FrameParser().feed(frame) == [(CMD_MOVE_SYNC, payload)]
+
+
+def test_state_wait_accepts_latest_nonzero_request_id():
+    transport = StepperSerial("unused")
+    payload = struct.pack("<BBHI", 0, STATUS_DONE, 301, 1600)
+    transport._handle_frame(CMD_STATUS, payload)
+    status = transport.wait_axis_status(0, {STATUS_DONE}, 0.01)
+    assert status.request_id == 301
+    assert status.executed_steps == 1600

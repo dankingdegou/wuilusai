@@ -7,15 +7,17 @@ import sys
 from pathlib import Path
 
 
-_package_sources = [
-    # Local competition layout: /home/rog/ros2_ws/wuliusai/scripts/..
-    Path(__file__).resolve().parents[1] / "ros2_ws" / "src" / "wuliusai_stepper_controller",
-    # Jetson deployment layout: /home/jetson/wuliusai_competition/scripts + ~/ros2_ws.
-    Path.home() / "ros2_ws" / "src" / "wuliusai_stepper_controller",
-]
-for PACKAGE_SOURCE in _package_sources:
-    if PACKAGE_SOURCE.is_dir() and str(PACKAGE_SOURCE) not in sys.path:
-        sys.path.insert(0, str(PACKAGE_SOURCE))
+_repo_package_source = (
+    Path(__file__).resolve().parents[1]
+    / "ros2_ws" / "src" / "wuliusai_stepper_controller"
+)
+_legacy_package_source = Path.home() / "ros2_ws" / "src" / "wuliusai_stepper_controller"
+# Use the repository beside this script whenever it exists.  The old Jetson
+# ~/ros2_ws checkout is only a compatibility fallback and must never override
+# the deployed repository version.
+PACKAGE_SOURCE = _repo_package_source if _repo_package_source.is_dir() else _legacy_package_source
+if PACKAGE_SOURCE.is_dir() and str(PACKAGE_SOURCE) not in sys.path:
+    sys.path.insert(0, str(PACKAGE_SOURCE))
 
 from wuliusai_stepper_controller.protocol import (  # noqa: E402
     STATUS_ACCEPTED,

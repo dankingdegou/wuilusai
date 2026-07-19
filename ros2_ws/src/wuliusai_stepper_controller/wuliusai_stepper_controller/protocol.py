@@ -178,6 +178,31 @@ class StepperSerial:
     def request_state(self, axis: int = ALL_AXES) -> None:
         self._write(make_frame(CMD_GET_STATE, bytes((axis,))))
 
+    def clear_statuses(self) -> None:
+        """Discard queued asynchronous statuses before issuing a fresh query."""
+        with self._state_lock:
+            self._statuses.clear()
+        self._status_event.clear()
+
+    def wait_axis_status(self, axis: int, wanted: set[int], timeout: float) -> Status:
+        """Return the next matching status for an axis, regardless of request id.
+
+        GET_STATE reports the axis' latest motion request id, which is not
+        necessarily zero after the first move.  State-query callers should use
+        this method; motion completion callers should keep using wait_status().
+        """
+        deadline = time.monotonic() + timeout
+        while True:
+            with self._state_lock:
+                for index, status in enumerate(self._statuses):
+                    if status.axis == axis and status.code in wanted:
+                        return self._statuses.pop(index)
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError(f"timed out waiting for axis {axis} status")
+            self._status_event.wait(min(remaining, 0.1))
+            self._status_event.clear()
+
     def wait_status(self, axis: int, request_id: int, wanted: set[int], timeout: float) -> Status:
         deadline = time.monotonic() + timeout
         while True:

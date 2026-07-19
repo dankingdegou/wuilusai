@@ -14,9 +14,10 @@ def main() -> None:
     try:
         print(f"打开串口: {args.port}")
         print(f"STM32 info: {require_latest_firmware(board)}")
+        board.clear_statuses()
         board.request_state(0xFF)
         for axis in (0, 1):
-            print_status("当前状态", board.wait_status(axis, 0, {0x01, 0x20}, 1.0))
+            print_status("当前状态", board.wait_axis_status(axis, {0x01, 0x20}, 1.0))
         print("通信测试通过：未发送任何步进脉冲。")
     finally:
         board.close()

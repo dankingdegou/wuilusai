@@ -13,9 +13,10 @@ from stepper_test_common import (
 
 
 def _state(board: StepperSerial, title: str) -> None:
+    board.clear_statuses()
     board.request_state(0xFF)
     for axis in (0, 1):
-        status = board.wait_status(axis, 0, {STATUS_DONE, 0x20}, 1.0)
+        status = board.wait_axis_status(axis, {STATUS_DONE, 0x20}, 1.0)
         print_status(title, status)
 
 
